@@ -2,7 +2,7 @@ from model_utils import load_recordings
 from keras.layers import Flatten, Dense, Cropping2D, Lambda, Conv2D, BatchNormalization, Dropout, MaxPooling2D
 from keras.models import Sequential
 
-X_train, y_train = load_recordings('data', 'drive2', 'recenter')
+X_train, y_train = load_recordings('sw_center', 'sw_recover', 'sw_jungle')
 
 model = Sequential()
 model.add(Cropping2D(cropping=((60, 20), (0, 0)), input_shape=(160, 320, 3)))

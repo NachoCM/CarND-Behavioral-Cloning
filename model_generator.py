@@ -3,7 +3,7 @@ from keras.layers import Flatten, Dense, Cropping2D, Lambda, Conv2D, BatchNormal
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
-X_train, y_train = parse_recordings('data', 'drive2', 'recenter')
+X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle')
 
 X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
 
@@ -23,9 +23,9 @@ model.add(Dense(1))
 
 print(model.summary())
 model.compile(loss='mse', optimizer='adam')
-model.fit_generator(generator=image_generator(X_train, y_train), samples_per_epoch=len(X_train),
+model.fit_generator(generator=image_generator(X_train, y_train), samples_per_epoch=2*len(X_train),
                     validation_data=image_generator(X_valid, y_valid),
-                    nb_val_samples=len(X_valid),
+                    nb_val_samples=2*len(X_valid),
                     nb_epoch=5, verbose=1)
 
 model.save('model.h5')
