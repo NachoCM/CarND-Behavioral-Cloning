@@ -78,7 +78,7 @@ def parse_recordings(*recording_names):
     return paths, measurements
 
 
-def image_generator(paths, measurements, batch_size=32):
+def image_generator(paths, measurements, batch_size=64):
     nsamples = len(paths)
     while 1:
         indexes = np.array(range(2*nsamples))
@@ -99,4 +99,6 @@ def image_generator(paths, measurements, batch_size=32):
                 yield np.array(batch_images), np.array(batch_measurements)
                 batch_images = []
                 batch_measurements = []
+        if len(batch_images) > 0:
+            yield np.array(batch_images), np.array(batch_measurements)
 
