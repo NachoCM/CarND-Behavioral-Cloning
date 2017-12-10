@@ -3,7 +3,7 @@ from keras.layers import Flatten, Dense, Cropping2D, Lambda, Conv2D, BatchNormal
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
-X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle')
+X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle', side_camera_bias=0.1)
 
 X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
 

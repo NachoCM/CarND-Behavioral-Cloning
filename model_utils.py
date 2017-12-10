@@ -42,7 +42,7 @@ def load_recordings(*recording_names):
     return np.array(images), np.array(measurements)
 
 
-def parse_recordings(*recording_names):
+def parse_recordings(*recording_names, side_camera_bias=0.1):
     paths = []
     measurements = []
     for recording_number in range(len(recording_names)):
@@ -55,26 +55,16 @@ def parse_recordings(*recording_names):
                 lines.append(line)
         for line in lines:
             # CENTER
-            filename = line[0].split('/')[-1]
-            path = recording_names[recording_number] + '/IMG/' + filename
-            measurement = float(line[3])
-            # store path and measurement for center image
-            paths.append(path)
-            measurements.append(measurement)
+            for i in range(3):
+                filename = line[i].split('/')[-1]
+                path = recording_names[recording_number] + '/IMG/' + filename
+                paths.append(path)
 
-            # LEFT
-            filename = line[1].split('/')[-1]
-            path = recording_names[recording_number] + '/IMG/' + filename
-            # store path and measurement for left image
-            paths.append(path)
-            measurements.append(measurement+0.2)
+            measurement_center = float(line[3])
 
-            # RIGHT
-            filename = line[2].split('/')[-1]
-            path = recording_names[recording_number] + '/IMG/' + filename
-            # store path and measurement for left image
-            paths.append(path)
-            measurements.append(measurement - 0.2)
+            measurements.append(measurement_center)
+            measurements.append(measurement_center+side_camera_bias)
+            measurements.append(measurement_center-side_camera_bias)
     return paths, measurements
 
 
