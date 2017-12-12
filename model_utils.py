@@ -67,7 +67,6 @@ def parse_recordings(*recording_names, side_camera_bias=0.1):
             measurements.append(measurement_center-side_camera_bias)
     return paths, measurements
 
-
 def image_generator(paths, measurements, batch_size=64):
     nsamples = len(paths)
     while 1:

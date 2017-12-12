@@ -23,3 +23,4 @@ model.compile(loss='mse', optimizer='adam')
 model.fit(X_train, y_train, validation_split=0.2, shuffle=True, batch_size=64, verbose=1)
 
 model.save('model.h5')
+
