@@ -3,7 +3,8 @@ from keras.layers import Flatten, Dense, Cropping2D, Lambda, Conv2D, BatchNormal
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
-X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle', side_camera_steering_bias=0.2, side_camera_throttle_bias=0.05)
+X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle', zero_throttle=('sw_recover'),
+                                    side_camera_steering_bias=.2, side_camera_throttle_bias=0.01)
 
 X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
 print('Shape of y_train:', len(y_train),len(y_train[0]))
