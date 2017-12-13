@@ -136,6 +136,7 @@ To augment the data sat, two strategies were used:
 
   ![alt text](./examples/flipped.jpg)
 * Images from lateral cameras, with adjusted steering angles. For example, these three images were captured simultaneously:
+
 ![alt text](./examples/sides_left.jpg)
 ![alt text](./examples/sides_center.jpg)
 ![alt text](./examples/sides_right.jpg)
@@ -150,11 +151,13 @@ I used this training data for training the model. The validation set helped dete
 ##### 4.1. Second track
 The model was used to try to drive in the second track. It invaded the left lane at times, and ended getting stuck, but it performed reasonably well, specially considering how difficult it was for me to drive in that track!
 A recording of the autonomous drive can be seen here:
+
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/YifOUg6EjyA/0.jpg)](http://www.youtube.com/watch?v=YifOUg6EjyA "Track 1")
 
 ##### 4.2 Adaptive speed
 An attempt to modify the drive.py file with target speed depending on the steering angle was implemented. The results were acceptable for the first track, altough the slowest speeds were reached at the exit of turns instead of during the turn, as the simulator had some lag implementing the required throttle values (when an order was executed, 5 other were already issued).
 A video of the drive can be seen here:
+
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/uBrxnIdwMXU/0.jpg)](http://www.youtube.com/watch?v=uBrxnIdwMXU "Track 1 - Adaptive speed")
 
 
