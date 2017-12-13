@@ -3,9 +3,10 @@ from keras.layers import Flatten, Dense, Cropping2D, Lambda, Conv2D, BatchNormal
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
-X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle', side_camera_bias=0.1)
+X_train, y_train = parse_recordings('sw_center', 'sw_recover', 'sw_jungle', side_camera_steering_bias=0.2, side_camera_throttle_bias=0.05)
 
 X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+print('Shape of y_train:', len(y_train),len(y_train[0]))
 
 model = Sequential()
 model.add(Cropping2D(cropping=((60, 20), (0, 0)), input_shape=(160, 320, 3)))
@@ -19,7 +20,7 @@ model.add(MaxPooling2D((2, 4)))
 model.add(Flatten())
 model.add(Dropout(0.5))
 model.add(Dense(256, activation='relu'))
-model.add(Dense(1))
+model.add(Dense(2))
 
 print(model.summary())
 model.compile(loss='mse', optimizer='adam')

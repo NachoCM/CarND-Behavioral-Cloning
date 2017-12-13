@@ -42,9 +42,10 @@ def load_recordings(*recording_names):
     return np.array(images), np.array(measurements)
 
 
-def parse_recordings(*recording_names, side_camera_bias=0.1):
+def parse_recordings(*recording_names, side_camera_steering_bias=0.1, side_camera_throttle_bias=0.1):
     paths = []
-    measurements = []
+    steering_angles = []
+    throttle_readings = []
     for recording_number in range(len(recording_names)):
         with open(recording_names[recording_number]+'/driving_log.csv') as file:
             lines = []
@@ -60,12 +61,21 @@ def parse_recordings(*recording_names, side_camera_bias=0.1):
                 path = recording_names[recording_number] + '/IMG/' + filename
                 paths.append(path)
 
-            measurement_center = float(line[3])
+            angle_center = float(line[3])
+            throttle_center = float(line[4])-float(line[5])
 
-            measurements.append(measurement_center)
-            measurements.append(measurement_center+side_camera_bias)
-            measurements.append(measurement_center-side_camera_bias)
-    return paths, measurements
+            if angle_center<0:
+                side_camera_throttle_bias = - side_camera_throttle_bias
+
+            steering_angles.append(angle_center)
+            steering_angles.append(angle_center + side_camera_steering_bias)
+            steering_angles.append(angle_center - side_camera_steering_bias)
+
+            throttle_readings.append(throttle_center)
+            throttle_readings.append(throttle_center - side_camera_throttle_bias)
+            throttle_readings.append(throttle_center + side_camera_throttle_bias)
+    return paths, list(zip(steering_angles, throttle_readings))
+
 
 def image_generator(paths, measurements, batch_size=64):
     nsamples = len(paths)
@@ -78,12 +88,14 @@ def image_generator(paths, measurements, batch_size=64):
             if i >= nsamples:
                 image = cv2.imread(paths[i-nsamples])
                 image = np.fliplr(image)
-                measurement = -measurements[i-nsamples]
+                steering = -measurements[i-nsamples][0]
+                throttle = measurements[i-nsamples][1]
             else:
                 image = cv2.imread(paths[i])
-                measurement = measurements[i]
+                steering = measurements[i][0]
+                throttle = measurements[i][1]
             batch_images.append(image)
-            batch_measurements.append(measurement)
+            batch_measurements.append((steering, throttle))
             if len(batch_images) == batch_size:
                 yield np.array(batch_images), np.array(batch_measurements)
                 batch_images = []
