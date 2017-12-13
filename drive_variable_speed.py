@@ -21,7 +21,8 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
-lookback_size=4
+lookback_size = 4
+
 
 class SimplePIController:
     def __init__(self, Kp, Ki):
@@ -36,8 +37,7 @@ class SimplePIController:
         self.set_point = desired
 
     def update(self, speed_measurement, steering_prediction):
-
-        target_speed=self.set_point*(1-2*steering_prediction)
+        target_speed = self.set_point * (1 - 2 * steering_prediction)
 
         # proportional error
         self.error = target_speed - speed_measurement
@@ -48,7 +48,7 @@ class SimplePIController:
         self.speeds.insert(0, speed_measurement)
         self.speeds.pop()
 
-        if (self.speeds[0] > self.speeds[-1]*1.3)&(self.speeds[0]>5):
+        if (self.speeds[0] > self.speeds[-1] * 1.3) & (self.speeds[0] > 5):
             return 0
 
         return self.Kp * self.error + self.Ki * self.integral
@@ -72,13 +72,13 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
-        #RGB to BGR
+        # RGB to BGR
         image_array = image_array[..., ::-1]
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
 
         throttle = controller.update(float(speed), steering_angle)
 
-        print(current_steering_angle,current_throttle, speed, '{:f}'.format(steering_angle), '{:f}'.format(throttle))
+        print(current_steering_angle, current_throttle, speed, '{:f}'.format(steering_angle), '{:f}'.format(throttle))
         send_control(steering_angle, throttle)
 
         # save frame
